@@ -1,15 +1,26 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { Upload, Image as ImageIcon, CheckCircle2, X } from "lucide-react";
+import useDetection from "../../hooks/useDetection";
 
 
-export default function UploadBox() {
+export default function UploadBox({enviarImagen, loading}) {
+
+
+    const fileInputRef = useRef(null);
+
+    // Logica de la pagina sin envio de la imagen solo diseño
     const [image, setImage] = useState(null)
 
-    const handlefile = (e) => {
+    const handleFile = (e) => {
+        console.log("ENTRO HANDLEFILE");
         const file = e.target.files[0]
-        if (file) setImage(URL.createObjectURL(file))
-    }
+        if (file) {
+            console.log("Archivo seleccionado:", file)
+            setImage(URL.createObjectURL(file))
+            enviarImagen(file)
+        }
 
+    }
     const clearImage = () => {
         setImage(null)
     }
@@ -37,11 +48,18 @@ export default function UploadBox() {
                         </p>
 
                         {/* Seleccion de imagen Buttom */}
-                        <label className="cursor-pointer bg-purple-600 hover:bg-purple-500 text-white px-8 py-3 rounded-xl flex items-center gap-3 transition-all active:scale-95 shadow-lg shadow-purple-950/40">
+
+                        <input type="file" ref={fileInputRef} className="hidden" onChange={handleFile} accept="image/*" />
+                        <button
+                            onClick={() => {
+                                console.log("CLICK BOTON"); // 👈 DEBUG
+                                fileInputRef.current.click();
+                            }}
+                            className="cursor-pointer bg-purple-600 hover:bg-purple-500 text-white px-8 py-3 rounded-xl flex items-center gap-3 transition-all active:scale-95 shadow-lg shadow-purple-950/40"
+                        >
                             <ImageIcon size={20} />
                             Select Image
-                            <input type="file" className="hidden" onChange={handlefile} accept="image/*" />
-                        </label>
+                        </button>
 
                     </div>
 
@@ -59,32 +77,19 @@ export default function UploadBox() {
                                 <div className="bg-white/20 rounded-full p-0.5">
                                     <CheckCircle2 size={16} />
                                 </div>
-                                Analysis Complete
+                                {loading ? "Analizando..." : "Analysis Complete"}
                             </div>
 
                             <button
                                 onClick={clearImage}
                                 className="absolute top-4 right-4 bg-black/60 hover:bg-red-500/90 text-white p-2.5 rounded-full transition-all backdrop-blur-sm border border-white/10 shadow-lg"
                                 title="Remove image" >
-
                                 <X size={20} />
                             </button>
-
-
                         </div>
-
-
 
                     )}
             </div>
-
-
-
-
-
-
-
-
 
         </div>
     )
