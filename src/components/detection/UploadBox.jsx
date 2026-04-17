@@ -1,6 +1,6 @@
 import React, { useState, useRef } from "react";
 import { Upload, Image as ImageIcon, CheckCircle2, X } from "lucide-react";
-import useDetection from "../../hooks/useDetection";
+
 
 
 export default function UploadBox({enviarImagen, loading}) {
@@ -22,6 +22,7 @@ export default function UploadBox({enviarImagen, loading}) {
 
     }
     const clearImage = () => {
+        if (image) URL.revokeObjectURL(image)
         setImage(null)
     }
 

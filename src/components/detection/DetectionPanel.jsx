@@ -4,23 +4,29 @@ import { Target, Zap, Shield, LayoutGrid } from 'lucide-react'
 
 
 
-const mockData = [
-    { name: "Cannon", level: 11, count: 3, confidence: 98, icon: Target },
-    { name: "Archer Tower", level: 10, count: 2, confidence: 97, icon: Target },
-    { name: "Wizard Tower", level: 9, count: 2, confidence: 96, icon: Zap },
 
-];
+export default function DetectionPanel({count ={}, loading}) {
+    
+    const data = Object.entries(count).map(([name, count]) =>({
+    name, 
+    count,
+    level: 10,
+    confidence:90,
+    icon:Target
+}))
 
 
-const totalStructures = mockData.reduce((sum, item) => sum + item.count, 0);
+const totalStructures = data.reduce((sum, item) => sum + item.count, 0);
 
-export default function DetectionPanel() {
+    if(loading){
+        return <p className="text-white"> Analizando imagen</p>
+    }
     return (
         <div className="bg-neutral-950 p-6 rounded-2xl border border-neutral-800 shadow-xl max-w-lg">
             <h2 className="text-2xl font-semibold text-neutral-100 mb-6 tracking-tight">
                 Detection Results</h2>
 
-            {mockData.map((item, index) => {
+            {data.map((item, index) => {
                 const IconComponent = item.icon
 
                 return (
