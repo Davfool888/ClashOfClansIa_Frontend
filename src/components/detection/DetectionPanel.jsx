@@ -1,94 +1,118 @@
 import React from "react";
-import { Target, Zap, Shield, LayoutGrid } from 'lucide-react'
+import { Target } from "lucide-react";
 
+export default function DetectionPanel({ count = {}, loading }) {
 
-
-
-
-export default function DetectionPanel({count ={}, loading}) {
-    
-    const data = Object.entries(count).map(([name, count]) =>({
-    name, 
+  const data = Object.entries(count).map(([name, count]) => ({
+    name,
     count,
     level: 10,
-    confidence:90,
-    icon:Target
-}))
+    confidence: 90,
+    icon: Target
+  }));
 
+  const totalStructures = data.reduce((sum, item) => sum + item.count, 0);
 
-const totalStructures = data.reduce((sum, item) => sum + item.count, 0);
-
-    if(loading){
-        return <p className="text-white"> Analizando imagen</p>
-    }
+  if (loading) {
     return (
-        <div className="bg-neutral-950 p-6 rounded-2xl border border-neutral-800 shadow-xl max-w-lg">
-            <h2 className="text-2xl font-semibold text-neutral-100 mb-6 tracking-tight">
-                Detection Results</h2>
+      <div className="text-gray-400 text-sm">
+        Analizando imagen...
+      </div>
+    );
+  }
 
-            {data.map((item, index) => {
-                const IconComponent = item.icon
+  return (
+    <div className="
+      bg-black/40 backdrop-blur-xl
+      border border-purple-500/20
+      rounded-2xl p-6
+      max-w-lg
+    ">
 
-                return (
+      {/* Title */}
+      <h2 className="text-xl font-semibold text-gray-100 mb-6">
+        Detection Results
+      </h2>
 
-                    <div key={index} className="bg-[#121217] p-4 rounded-xl border border-neutral-800 mb-3">
+      {/* Items */}
+      <div className="flex flex-col gap-3">
+        {data.map((item, index) => {
+          const IconComponent = item.icon;
 
-                        <div className="flex items-center gap-4 mb-2">
-{/* Icono panel */}
-                            <div className="flex-shrink-0 bg-purple-950/40 border border-purple-800 p-3 rounded-lg text-purple-400">
-                                <IconComponent className="w-6 h-6" strokeWidth={1.5} />
-                            </div>
+          return (
+            <div
+              key={index}
+              className="
+                bg-white/5
+                border border-white/10
+                rounded-xl p-4
+                transition-all duration-200
+                hover:bg-white/10
+              "
+            >
 
-{/* etiquetas de count y name, + level */}
-                            <div className="flex-grow">
-                                <span className="text-lg font-bold text-neutral-50 block leading-tight">
-                                    {item.count}x {item.name}
-                                </span>
-                                <span className="text-sm font-medium text-neutral-400">
-                                    Level {item.level}
-                                </span>
-                            </div>
+              <div className="flex items-center gap-4">
 
-{/* confidence en la deteccion */}
-                            <div className="text-right">
-                                <span className="text-xs font-medium text-neutral-500 block uppercase tracking-wider">
-                                    confidence
-                                </span>
-                                <span className="text-xl font-extrabold text-purple-400">
-                                    {item.confidence}%
-                                </span>
-                            </div>
+                {/* Icon */}
+                <div className="
+                  bg-purple-500/10
+                  border border-purple-500/20
+                  p-3 rounded-lg
+                  text-purple-400
+                ">
+                  <IconComponent className="w-5 h-5" strokeWidth={1.5} />
+                </div>
 
-                        </div>
+                {/* Info */}
+                <div className="flex-1">
+                  <p className="text-sm font-semibold text-gray-100">
+                    {item.count}x {item.name}
+                  </p>
+                  <p className="text-xs text-gray-400">
+                    Level {item.level}
+                  </p>
+                </div>
 
-{/* Barra de progreso panel */}
+                {/* Confidence */}
+                <div className="text-right">
+                  <p className="text-xs text-gray-500 uppercase">
+                    confidence
+                  </p>
+                  <p className="text-sm font-semibold text-purple-400">
+                    {item.confidence}%
+                  </p>
+                </div>
 
-                        <div className="w-full bg-neutral-800 rounded-full h-1.5 mt-3 overflow-hidden">
-                            <div
-                                className="bg-purple-500 h-1.5 rounded-full"
-                                style={{ width: `${item.confidence}%` }}
-                            >
+              </div>
 
-                            </div>
-                        </div>
+              {/* Progress */}
+              <div className="mt-3 h-1.5 w-full bg-white/10 rounded-full overflow-hidden">
+                <div
+                  className="h-full bg-purple-500 rounded-full transition-all"
+                  style={{ width: `${item.confidence}%` }}
+                />
+              </div>
 
-
-
-                    </div>
-                )
-            })}
-
-{/* Total estructuras panel */}
-            <div className="mt-6 p-5 rounded-2xl bg-[#0e0e11] border border-neutral-800 text-center">
-                <span className="text-sm font-medium text-neutral-400 block mb-1">
-                    Total Structures Detected
-                </span>
-                <span className="text-3xl font-extrabold text-neutral-50 tracking-tighter">
-                    {totalStructures}
-                </span>
             </div>
+          );
+        })}
+      </div>
 
+      {/* Total */}
+      <div className="
+        mt-6 p-5 rounded-xl
+        bg-white/5
+        border border-white/10
+        text-center
+      ">
+        <p className="text-xs text-gray-400 mb-1">
+          Total Structures
+        </p>
+        <p className="text-2xl font-bold text-gray-100">
+          {totalStructures}
+        </p>
+      </div>
 
-        </div>
-    )
+    </div>
+  );
 }

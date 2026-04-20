@@ -15,7 +15,7 @@ export default function useDetection(){
 
         try {
             const data = await analizarImagen(file)
-            setDetecciones(data.detecciones)
+            setDetecciones(data)
             setCount(data.count)
         } catch (error) {
             setError(error.message)

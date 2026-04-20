@@ -1,10 +1,11 @@
 import React, { useState, useRef } from "react";
-import { Upload, Image as ImageIcon, CheckCircle2, X } from "lucide-react";
 import DetectionCanvas from "./DetectionCanvas";
+import { Upload, Image as ImageIcon, CheckCircle2, X, Maximize2, Minimize2 } from "lucide-react";
 
 
 
-export default function UploadBox({ enviarImagen, loading, setImagePreview, detecciones }) {
+
+export default function UploadBox({ enviarImagen, loading, setImagePreview, detecciones, isExpanded, setIsExpanded }) {
 
 
     const fileInputRef = useRef(null);
@@ -34,7 +35,11 @@ export default function UploadBox({ enviarImagen, loading, setImagePreview, dete
     }
 
     return (
-        <div className="bg-neutral-950 p-6 rounded-2xl border border-neutral-800 w-full max-w-2xl mx-auto">
+        <div className={`
+        bg-neutral-950 p-6 rounded-2xl border border-neutral-800 
+        w-full mx-auto transition-all duration-500
+        ${isExpanded ? "max-w-none" : "max-w-2xl"}
+      `}>
             <h2 className="text-xl font-bold text-white mb-6">
                 Upload Image
             </h2>
@@ -77,11 +82,19 @@ export default function UploadBox({ enviarImagen, loading, setImagePreview, dete
                     (
                         <div className="relative group  animate-in fade-in zoom-in duration-300">
 
-                            <div className="relative">
+                            <div className="relative w-full">
                                 <DetectionCanvas
                                     image={image}
                                     data={detecciones}
+                                    isExpanded={isExpanded}
                                 />
+
+                                <button
+                                    onClick={() => setIsExpanded(!isExpanded)}
+                                    className="absolute bottom-4 right-4 z-30 bg-purple-600 hover:bg-purple-500 text-white p-3 rounded-xl shadow-xl transition-all active:scale-95"
+                                >
+                                    {isExpanded ? <Minimize2 size={20} /> : <Maximize2 size={20} />}
+                                </button>
                             </div>
 
                             <div className="absolute top-4 left-4 bg-green-500/90 backdrop-blur-md text-white px-5 py-2 rounded-full flex items-center gap-2.5 text-sm font-bold shadow-xl border border-white/20">
@@ -94,7 +107,7 @@ export default function UploadBox({ enviarImagen, loading, setImagePreview, dete
                             <button
                                 onClick={clearImage}
                                 className="absolute top-4 right-4 bg-black/60 hover:bg-red-500/90 text-white p-2.5 rounded-full transition-all backdrop-blur-sm border border-white/10 shadow-lg"
-                                title="Remove image" >
+                            >
                                 <X size={20} />
                             </button>
                         </div>

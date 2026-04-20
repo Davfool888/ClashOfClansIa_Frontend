@@ -9,60 +9,63 @@ export default function DetectionCanvas({ image, data }) {
         const img = imgRef.current
         const canvas = canvasRef.current
         const ctx = canvas.getContext("2d")
-    
 
-    if (!img || !canvas || !data) return
 
-    const draw = () => {
-        const displayedWidth = img.clientWidth
-        const displayedHeight = img.clientHeight
+        if (!img || !canvas || !data || !data.detecciones) return
 
-        canvas.width = displayedWidth
-        canvas.height = displayedHeight
+        const draw = () => {
+            const displayedWidth = img.clientWidth
+            const displayedHeight = img.clientHeight
 
-        ctx.clearRect(0, 0, canvas.width, canvas.height)
+            canvas.width = displayedWidth
+            canvas.height = displayedHeight
 
-        const scaleX = displayedWidth / data.width
-        const scaleY = displayedHeight / data.height
+            ctx.clearRect(0, 0, canvas.width, canvas.height)
 
-        data.detecciones.forEach(det => {
-            const [x1, y1, x2, y2] = det.bbox
+            const scaleX = displayedWidth / data.width
+            const scaleY = displayedHeight / data.height
 
-            const x = x1 * scaleX;
-            const y = y1 * scaleY;
-            const w = (x2 - x1) * scaleX;
-            const h = (y2 - y1) * scaleY;
+            data.detecciones.forEach(det => {
+                const [x1, y1, x2, y2] = det.bbox
 
-            ctx.strokeStyle = "red"
-            ctx.lineWidth = 2
-            ctx.strokeRect(x, y, w, h)
-        })
-    }
+                const x = x1 * scaleX;
+                const y = y1 * scaleY;
+                const w = (x2 - x1) * scaleX;
+                const h = (y2 - y1) * scaleY;
 
-    if(img.complete){
-        draw()
-    } else {
-         img.addEventListener("load", draw)
-    }
-}, [data])
+                ctx.strokeStyle = "red"
+                ctx.lineWidth = 2
+                ctx.strokeRect(x, y, w, h)
+            })
+        }
 
-return (
-    <div style={{position:"relative", display:"inline-block"}}>
-        <img 
-        ref={imgRef}
-        src={image} 
-        alt="preview"
-        style={{ width: "100%", maxWidth: "600px" }} />
+        if (img.complete) {
+            draw()
+        } else {
+            img.addEventListener("load", draw)
+        }
+    }, [data])
 
-        <canvas
-        ref={canvasRef}
-        style={{
-            position:"absolute",
-            top:0,
-            left: 0
-        }}
-        />
-    </div>
-)
+    return (
+        <div style={{ position: "relative", width: "100%" }}>
+            <img
+                ref={imgRef}
+                src={image}
+                alt="preview"
+                className="w-full h-auto object-contain" />
+
+            <canvas
+                ref={canvasRef}
+                style={{
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    width: "100%",
+                    height: "100%",
+                    pointerEvents: "none"
+                }}
+            />
+        </div>
+    )
 
 }

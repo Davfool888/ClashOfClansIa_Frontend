@@ -9,6 +9,7 @@ import { useState } from "react";
 
 export default function Analyze() {
   // Estado para poder dibujar sobre la imagen
+  
   const [imagePreview, setImagePreview] = useState(null);
   // Estado para poder expandir la imagen
   const [isExpanded, setIsExpanded] = useState(false)
@@ -32,11 +33,7 @@ export default function Analyze() {
             enviarImagen={enviarImagen}
             loading={loading}
             setImagePreview={setImagePreview}
-            detecciones={{
-              width: 2674,
-              height: 1675,
-              detecciones: detecciones
-            }}
+            detecciones={detecciones}
 
             isExpanded={isExpanded}
             setIsExpanded={setIsExpanded}
