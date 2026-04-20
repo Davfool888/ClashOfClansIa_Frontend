@@ -1,9 +1,10 @@
 import React, { useState, useRef } from "react";
 import { Upload, Image as ImageIcon, CheckCircle2, X } from "lucide-react";
+import DetectionCanvas from "./DetectionCanvas";
 
 
 
-export default function UploadBox({enviarImagen, loading}) {
+export default function UploadBox({ enviarImagen, loading, setImagePreview, detecciones }) {
 
 
     const fileInputRef = useRef(null);
@@ -12,13 +13,19 @@ export default function UploadBox({enviarImagen, loading}) {
     const [image, setImage] = useState(null)
 
     const handleFile = (e) => {
-        console.log("ENTRO HANDLEFILE");
+
         const file = e.target.files[0]
-        if (file) {
-            console.log("Archivo seleccionado:", file)
-            setImage(URL.createObjectURL(file))
-            enviarImagen(file)
-        }
+
+        if (!file) return;
+        console.log("Archivo seleccionado:", file)
+
+        const imageUrl = URL.createObjectURL(file)
+
+        setImage(imageUrl)
+        setImagePreview(imageUrl)
+
+        enviarImagen(file)
+
 
     }
     const clearImage = () => {
@@ -70,9 +77,12 @@ export default function UploadBox({enviarImagen, loading}) {
                     (
                         <div className="relative group  animate-in fade-in zoom-in duration-300">
 
-                            <img
-                                src={image} alt="Uploaded preview" className="w-full mt-4 rounded-2xl"
-                            />
+                            <div className="relative">
+                                <DetectionCanvas
+                                    image={image}
+                                    data={detecciones}
+                                />
+                            </div>
 
                             <div className="absolute top-4 left-4 bg-green-500/90 backdrop-blur-md text-white px-5 py-2 rounded-full flex items-center gap-2.5 text-sm font-bold shadow-xl border border-white/20">
                                 <div className="bg-white/20 rounded-full p-0.5">
